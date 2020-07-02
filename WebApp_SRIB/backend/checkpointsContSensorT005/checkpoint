@@ -1,0 +1,2 @@
+model_checkpoint_path: "checkpointContSensorT005.chk"
+all_model_checkpoint_paths: "checkpointContSensorT005.chk"
