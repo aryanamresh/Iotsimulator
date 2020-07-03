@@ -2,6 +2,11 @@
 from flask import Flask, jsonify, request, send_file
 from flask_restful import Resource, Api 
 
+import sys
+sys.path.insert(1, 'C:\\Users\\Dhananjay Deswal\\Documents\\SRIBgithub\\Iotsimulator\\WebApp_SRIB\\backend\\Data_Processing')
+#print(sys.path)
+from Data_Processing.main import handleNLUoutput
+
 # creating the flask app 
 app = Flask(__name__) 
 # creating an API object 
@@ -20,14 +25,12 @@ def after_request(response):
 
 import numpy as np
 
-def tgan(query):
+def handleQuery(query):
 
-	if query=="s":
-		fileName = "CASAS_aruba_data_continuous_sensorT005.csv"
-	elif query=="g":
-		fileName = "GOOGLE_BIG.csv"
-
-	return fileName
+	tup = (1, 10,5,5,0)
+	handleNLUoutput(tup)
+	filePath = 'output.csv'
+	return filePath
 
 	dataX = np.loadtxt('data/CASAS_aruba_data_continuous_sensorT005.csv', delimiter = ",",skiprows = 1)
 	dataX_hat = []
@@ -82,9 +85,9 @@ class Simulate(Resource):
 		postedData = request.get_json()
 		query = postedData["query"]
 
-		fileName = tgan(query)
+		filePath = handleQuery(query)
 
-		return send_file('data/'+fileName,
+		return send_file(filePath,
                      mimetype='text/csv',
                      attachment_filename='Output.csv',
                      as_attachment=True)
