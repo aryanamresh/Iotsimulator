@@ -25,12 +25,22 @@ def after_request(response):
 
 import numpy as np
 
-def handleQuery(query):
+def handleQuery(postedData):
 
-	tup = (1, 10,5,5,0)
+	if postedData["query"]==0:
+		tup = (1, postedData["userFreq"], postedData["doorSensors"], postedData["motionSensors"], postedData["tempSensors"])
+
+	else:
+		tup = (1, 10,5,5,0)
+
 	handleNLUoutput(tup)
 	filePath = 'output.csv'
 	return filePath
+
+
+
+
+def generateGraphData():
 
 	dataX = np.loadtxt('data/CASAS_aruba_data_continuous_sensorT005.csv', delimiter = ",",skiprows = 1)
 	dataX_hat = []
@@ -83,21 +93,30 @@ class Simulate(Resource):
 	def post(self):
 		
 		postedData = request.get_json()
-		query = postedData["query"]
 
-		filePath = handleQuery(query)
+		filePath = handleQuery(postedData)
 
 		return send_file(filePath,
                      mimetype='text/csv',
                      attachment_filename='Output.csv',
                      as_attachment=True)
 
+class GraphData(Resource):
+
+	def post(self):
+
+		postedData = request.get_json()
+		query = postedData["query"]
+
+		arr = generateGraphData()
+		return jsonify({"logs":arr})
 
 
 # adding the defined resources along with their corresponding urls 
 api.add_resource(Hello, '/') 
 api.add_resource(Square, '/square/<int:num>') 
 api.add_resource(Simulate, '/simulate')
+api.add_resource(GraphData, '/graphdata')
 
 
 # driver function 

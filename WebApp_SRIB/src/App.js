@@ -19,7 +19,11 @@ class App extends React.Component{
 
     userFreq:1,
     deviceList:["TV", "AC", "Tubelight", "Lock", "Fan"],
-    deviceSet:new Set()
+    deviceSet:new Set(),
+
+    doorSensors:0,
+    motionSensors:0,
+    tempSensors:0,
   }
 
   increaseUserFreq = (upperLimit)=>{
@@ -33,6 +37,22 @@ class App extends React.Component{
     let x = this.state.userFreq;
     if(x>lowerLimit){
       this.setState({userFreq:x-1});
+    }
+  }
+
+  increaseDeviceCount = (name, jsonObj, upperLimit)=>{
+    let x = this.state[name];
+    if(x<upperLimit){
+      jsonObj[name] = x+1;
+      this.setState(jsonObj);
+    }
+  }
+
+  decreaseDeviceCount = (name, jsonObj, lowerLimit)=>{
+    let x = this.state[name];
+    if(x>lowerLimit){
+      jsonObj[name] = x-1;
+      this.setState(jsonObj);
     }
   }
 
@@ -82,12 +102,8 @@ class App extends React.Component{
       }
     ];
 
-    return(
-      <div 
-        ref={r => {r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
-        style={{padding:2}}
-      >
-        <DataTable
+    /*
+      <DataTable
           title="IoT Data"
           columns={columns}
           data={arr}
@@ -96,6 +112,14 @@ class App extends React.Component{
           paginationPerPage={5}
           paginationRowsPerPageOptions={[5,10,20,30]}
         />
+    */
+
+    return(
+      <div 
+        ref={r => {r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
+        style={{padding:2}}
+      >
+      
         
         <div
           style={{backgroundColor:'white', width:'100%', overflowX:'scroll'}}
@@ -179,6 +203,28 @@ class App extends React.Component{
           alert("some error occured : "+error);
         }
       );
+
+
+
+
+      let endPoint2 = "/graphdata";
+      axios.post(url+endPoint2, postData)
+      .then(
+
+        (response)=>{
+          //console.log(response.data);
+          let comp2 = this.createResponseTableWithGraph(response.data);
+          arr.push(comp2);
+          this.setState({chatList:arr, message:""});
+        }
+
+      )
+      .catch(
+        (error)=>{
+          console.log(error);
+          alert("some error occured : "+error);
+        }
+      );
       
     }
     
@@ -221,16 +267,75 @@ class App extends React.Component{
     );
   }
 
+  renderDevices2 = ()=>{
+
+    let minDoorSensors = 0, maxDoorSensors = 100;
+    let minMotionSensors = 0, maxMotionSensors = 100;
+    let minTempSensors = 0, maxTempSensors = 100;
+
+    return(
+    <div>
+      <text style={{fontWeight:'bold'}}>Door Sensors</text>
+      <br/>
+      <button onClick={()=>this.decreaseDeviceCount("doorSensors", {"doorSensors":0}, minDoorSensors)}>-</button>
+      <input value={this.state.doorSensors}/>
+      <button onClick={()=>this.increaseDeviceCount("doorSensors", {"doorSensors":0}, maxDoorSensors)}>+</button>
+      <br/>
+      <br/>
+      <br/>
+      <text style={{fontWeight:'bold'}}>Motion Sensors</text>
+      <br/>
+      <button onClick={()=>this.decreaseDeviceCount("motionSensors", {"motionSensors":0}, minMotionSensors)}>-</button>
+      <input value={this.state.motionSensors}/>
+      <button onClick={()=>this.increaseDeviceCount("motionSensors", {"motionSensors":0}, maxMotionSensors)}>+</button>
+      <br/>
+      <br/>
+      <br/>
+      <text style={{fontWeight:'bold'}}>Temperature Sensors</text>
+      <br/>
+      <button onClick={()=>this.decreaseDeviceCount("tempSensors", {"tempSensors":0}, minTempSensors)}>-</button>
+      <input value={this.state.tempSensors}/>
+      <button onClick={()=>this.increaseDeviceCount("tempSensors", {"tempSensors":0}, maxTempSensors)}>+</button>
+    </div>
+    );
+  }
+
   submitForm = ()=>{
-    if(this.state.deviceSet.size==0){
+    if(this.state.doorSensors+this.state.motionSensors+this.state.tempSensors==0){
       alert("Please select at least 1 IoT device");
       return;
     }
-    let arr=[];
-    for(let device of this.state.deviceSet){
-      arr.push(device)
-    }
-    alert(" UserFreq : "+this.state.userFreq+"\n Selected devices : "+JSON.stringify(arr))
+  
+    alert(" UserFreq : "+this.state.userFreq+"\n doorSensors : "+this.state.doorSensors+"\n motionSensors : "+this.state.motionSensors+"\n tempSensors : "+this.state.tempSensors+"\n Click Ok to simulate IoT data");
+
+
+    let postData = {"query":0, 
+                    "userFreq":this.state.userFreq,
+                    "doorSensors":this.state.doorSensors,
+                    "motionSensors":this.state.motionSensors,
+                    "tempSensors":this.state.tempSensors
+                  };
+
+    let endPoint = "/simulate";
+    let arr = this.state.chatList;
+    axios.post(url+endPoint, postData)
+    .then(
+
+      (response)=>{
+        //console.log(response.data);
+        let comp2 = this.createDownloadLink(response.data);
+        arr.push(comp2);
+        this.setState({chatList:arr, message:""});
+      }
+
+    )
+    .catch(
+      (error)=>{
+        console.log(error);
+        alert("some error occured : "+error);
+      }
+    );
+
   }
 
   renderForm = ()=>{
@@ -252,7 +357,7 @@ class App extends React.Component{
         <h3>Select the IoT devices</h3>
         <div>
         {
-          this.renderDevices()
+          this.renderDevices2()
         }
         </div>
       </div>
