@@ -8,13 +8,25 @@ import axios from 'axios';
 
 
 const url = "http://127.0.0.1:5000" ;
-const WindowHeight = window.innerHeight-100;
-const WindowWidth = window.innerWidth-100;
 
 class App extends React.Component{
 
   state={
-    chatList:[<div>Hi! How can i help you?</div>],
+    WindowHeight: window.innerHeight-27,
+    WindowWidth: window.innerWidth,
+
+    chatList:[
+                <div 
+                  style={{marginTop:5, padding:2, display:'flex'}}
+                >
+                  <div style={{backgroundColor:'white', height:60, width:60, borderRadius:'100%', marginRight:10}}>
+                    <img src="bot.jpg" style={{height:'100%', width:'100%', borderRadius:'100%'}}/>
+                  </div>
+                  <div style={{backgroundColor:'white', borderRadius:5, padding:10, maxWidth:'70%'}}>
+                  <text>Hi, Welcome to Deep Sim. Here you can simulate IoT data for different number of users and IoT devices. You can may either enter your query in text box or directly select the options from the left.</text>
+                  </div>
+                </div>
+              ],
     message:"",
 
     userFreq:1,
@@ -57,14 +69,37 @@ class App extends React.Component{
   }
 
 
-  createUserMessage = ()=>{
+  createLoadingComp = ()=>{
+
+    let gif = (
+      <div 
+        style={{width:200, borderRadius:5, padding:5}}
+      >
+        <text>Processing the data</text>
+        <div style={{height:200, width:'100%'}}>
+          <img src="loading.gif" alt="Loading..." style={{height:'100%', width:'100%'}}/>
+        </div>
+      </div>
+    );
+
+    let loadingComp = this.createTextResponse(gif);
+
+    return loadingComp;
+    
+  }
+
+
+  createUserMessage = (comp)=>{
     return(
       <div 
-        ref={r => {r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
-        style={{padding:2}}
+        style={{marginTop:5, padding:2, display:'flex', justifyContent:'flex-end'}}
       >
-        {this.state.message}
-        
+        <div style={{backgroundColor:'#b9f6ca', borderRadius:5, padding:10, maxWidth:'70%'}}>
+          {comp}
+        </div>
+        <div style={{backgroundColor:'white', height:60, width:60, borderRadius:'100%', marginLeft:10}}>
+          <img src="userAvatar.png" style={{height:'100%', width:'100%', borderRadius:'100%'}}/>
+        </div>
       </div>
     );
   }
@@ -72,9 +107,7 @@ class App extends React.Component{
   createDownloadLink = (csvData)=>{
 
     return(
-      <div
-        ref={r => {r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
-      >
+      <div>
         <a 
           href={URL.createObjectURL(new Blob([csvData], { type: "text/csv" }))} 
           download="output.csv"
@@ -84,6 +117,63 @@ class App extends React.Component{
       </div>
     )
   }
+
+  createTextResponse = (txt)=>{
+
+    return(
+      <div 
+        ref={r => {if(r) r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
+        style={{marginTop:5, padding:2, display:'flex'}}
+      >
+        <div style={{backgroundColor:'white', height:60, width:60, borderRadius:'100%', marginRight:10}}>
+          <img src="bot.jpg" style={{height:'100%', width:'100%', borderRadius:'100%'}}/>
+        </div>
+        <div style={{backgroundColor:'white', borderRadius:5, padding:10, maxWidth:'70%'}}>
+          {txt}
+        </div>
+      </div>
+    )
+  }
+
+  createSummaryReport = (csvData)=>{
+    const {WindowHeight, WindowWidth} = this.state;
+    return(
+      <div
+        ref={r => {if(r) r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
+      >
+        <div>
+          {
+            this.createTextResponse("Data is ready...")
+          }
+        </div>
+        <div style={{backgroundColor:'white', width:'100%', height:0.9*WindowHeight, borderRadius:5}}>
+          <div style={{display:'flex', height:'50%'}}>
+            <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
+              <text>Summary Report</text>
+              {
+                this.createDownloadLink(csvData)
+              }
+            </div>
+            <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
+              <text>Graph 1</text>
+            </div>
+            <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
+              <text>Algo details and accuracy</text>
+            </div>
+          </div>
+          <div style={{display:'flex', height:'50%'}}>
+            <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
+              <text>Original vs Simulated Data</text>
+            </div>
+            <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
+              <text>Graph 2</text>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
 
   createResponseTableWithGraph = (data)=>{
 
@@ -116,7 +206,7 @@ class App extends React.Component{
 
     return(
       <div 
-        ref={r => {r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
+        ref={r => {if(r) r.scrollIntoView({behavior:'smooth', block:'nearest'});}}
         style={{padding:2}}
       >
       
@@ -165,68 +255,65 @@ class App extends React.Component{
   send = ()=>{
 
     if(this.state.message==""){
-      alert("Please enter your message");
+      alert("Please enter your query or select options from the menu");
       return;
     }
 
 
     let arr = this.state.chatList;
 
-    var comp = this.createUserMessage();
+    var comp = this.createUserMessage(<text>{this.state.message}</text>);
 
     arr.push(comp);
+
+    let loadingComp = this.createLoadingComp();
+    arr.push(loadingComp);
 
     this.setState({chatList:arr, message:""});
 
 
+    if(!this.simulate(this.state.message)){
 
-    if(this.simulate(this.state.message)){
-      let s = this.state.message;
+      //let txt = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with d";
+      let txt = "I am sorry, I didn't get you. Please try again or use the options on the left.";
+      let comp = this.createTextResponse(txt);
 
-      let postData = {"query":s};
+      let arr = this.state.chatList;
+      arr.pop();
+      arr.push(comp);
+      this.setState({chatList:arr});
 
-      let endPoint = "/simulate";
-      axios.post(url+endPoint, postData)
-      .then(
+      return;
 
-        (response)=>{
-          //console.log(response.data);
-          let comp2 = this.createDownloadLink(response.data);
-          arr.push(comp2);
-          this.setState({chatList:arr, message:""});
-        }
-
-      )
-      .catch(
-        (error)=>{
-          console.log(error);
-          alert("some error occured : "+error);
-        }
-      );
-
-
-
-
-      let endPoint2 = "/graphdata";
-      axios.post(url+endPoint2, postData)
-      .then(
-
-        (response)=>{
-          //console.log(response.data);
-          let comp2 = this.createResponseTableWithGraph(response.data);
-          arr.push(comp2);
-          this.setState({chatList:arr, message:""});
-        }
-
-      )
-      .catch(
-        (error)=>{
-          console.log(error);
-          alert("some error occured : "+error);
-        }
-      );
-      
     }
+
+
+    
+    let s = this.state.message;
+
+    let postData = {"query":s};
+
+    let endPoint = "/simulate";
+    axios.post(url+endPoint, postData)
+    .then(
+
+      (response)=>{
+        //console.log(response.data);
+        let comp2 = this.createSummaryReport(response.data);
+        arr.pop();
+        arr.push(comp2);
+        this.setState({chatList:arr, message:""});
+      }
+
+    )
+    .catch(
+      (error)=>{
+        console.log(error);
+        alert("some error occured : "+error);
+      }
+    );
+    
+    
     
     
   }
@@ -282,13 +369,11 @@ class App extends React.Component{
       <button onClick={()=>this.increaseDeviceCount("doorSensors", {"doorSensors":0}, maxDoorSensors)}>+</button>
       <br/>
       <br/>
-      <br/>
       <text style={{fontWeight:'bold'}}>Motion Sensors</text>
       <br/>
       <button onClick={()=>this.decreaseDeviceCount("motionSensors", {"motionSensors":0}, minMotionSensors)}>-</button>
       <input value={this.state.motionSensors}/>
       <button onClick={()=>this.increaseDeviceCount("motionSensors", {"motionSensors":0}, maxMotionSensors)}>+</button>
-      <br/>
       <br/>
       <br/>
       <text style={{fontWeight:'bold'}}>Temperature Sensors</text>
@@ -305,9 +390,28 @@ class App extends React.Component{
       alert("Please select at least 1 IoT device");
       return;
     }
-  
-    alert(" UserFreq : "+this.state.userFreq+"\n doorSensors : "+this.state.doorSensors+"\n motionSensors : "+this.state.motionSensors+"\n tempSensors : "+this.state.tempSensors+"\n Click Ok to simulate IoT data");
 
+    const {userFreq, doorSensors, motionSensors, tempSensors} = this.state;
+  
+    let s0 = "Simulate data for "
+    let s1 = (userFreq>1)? (userFreq+" users, "):(userFreq+" user, ");
+    let s2 = (doorSensors>1)? (doorSensors+" door sensors, "):(doorSensors+" door sensor, ");
+    let s3 = (motionSensors>1)? (motionSensors+" motion sensors, "):(motionSensors+" motion sensor, ");
+    let s4 = (tempSensors>1)? (tempSensors+" temperature sensors"):(tempSensors+" temperature sensor");
+    let msg = (
+      <div>
+        <text>{s0+s1+s2+s3+s4}</text>
+      </div>
+    )
+
+    let arr = this.state.chatList;
+
+    let userMsg = this.createUserMessage(msg);
+    arr.push(userMsg);
+    
+    let loadingComp = this.createLoadingComp();
+    arr.push(loadingComp);
+    this.setState({chatList:arr});
 
     let postData = {"query":0, 
                     "userFreq":this.state.userFreq,
@@ -317,13 +421,13 @@ class App extends React.Component{
                   };
 
     let endPoint = "/simulate";
-    let arr = this.state.chatList;
     axios.post(url+endPoint, postData)
     .then(
 
       (response)=>{
         //console.log(response.data);
-        let comp2 = this.createDownloadLink(response.data);
+        let comp2 = this.createSummaryReport(response.data);
+        arr.pop();
         arr.push(comp2);
         this.setState({chatList:arr, message:""});
       }
@@ -338,23 +442,21 @@ class App extends React.Component{
 
   }
 
+
   renderForm = ()=>{
 
     let minUserFreq = 1, maxUserFreq = 100
 
     return(
-    <div>
-      <div style={{display:'flex',justifyContent:'center', alignItems:'center'}}>
-        <h1>OR</h1>
-      </div>
+    <div style={{display:'flex', flexDirection:'column', padding:20}}>
       <div>
-        <h3>Select the number of users</h3>
+        <h4>Select the number of users</h4>
         <button onClick={()=>this.decreaseUserFreq(minUserFreq)}>-</button>
         <input value={this.state.userFreq}/>
         <button onClick={()=>this.increaseUserFreq(maxUserFreq)}>+</button>
       </div>
       <div>
-        <h3>Select the IoT devices</h3>
+        <h4>Select the IoT devices</h4>
         <div>
         {
           this.renderDevices2()
@@ -363,7 +465,7 @@ class App extends React.Component{
       </div>
       <button 
         onClick={()=>{this.submitForm()}}
-        style={{marginTop:20, padding:5, borderRadius:5, backgroundColor:"#2196f3", color:'white'}}
+        style={{marginTop:40, padding:5, borderRadius:5, backgroundColor:"#2196f3", color:'white', borderWidth:0}}
       >
       <text style={{fontSize:20, fontWeight:'bold'}}>Submit</text>
       </button>
@@ -375,37 +477,54 @@ class App extends React.Component{
 
   render(){
 
+    const {WindowHeight, WindowWidth} = this.state;
+
     return(
-      <div style={{backgroundColor:'yellow', padding:60}}>
+      <div>
         <div style={{height:WindowHeight , width:WindowWidth}}>
           
-          <div style={{backgroundColor:'pink', height:'80%', overflowY:'scroll'}}>
-          {
-            this.renderChatList()
-          }
+          <div style={{display:'flex', padding:20, alignItems:'center', backgroundColor:"#80d8ff"}}>
+            <div style={{backgroundColor:'white',height:45, width:45, borderRadius:'100%'}}>
+              <img src="logo192.png" style={{height:'100%', width:'100%'}}/>
+            </div>
+            <text style={{paddingLeft:10, fontSize:30, fontWeight:'bolder'}}>Deep Sim</text>
+          </div>
+
+          <div style={{display:'flex', height:'90%'}}>
+
+            <div style={{backgroundColor:"white", height:'100%', flex:1}}>
+              {
+                this.renderForm()
+              }
+            </div>
+
+            <div style={{height:'100%', flex:4, backgroundColor:'pink'}}>
+              <div style={{height:'80%', padding:20, overflowY:'scroll'}}>
+              {
+                this.renderChatList()
+              }
+              </div>
+              <div>
+                <input 
+                  style={{margin:10, padding:5, width:'80%', borderRadius:5, borderWidth:0}}
+                  placeHolder="Enter your query......Or use the options on left"
+                  value={this.state.message}
+                  onChange={this.onChangeText}
+                  onKeyDown={(e)=>{if(e.key=="Enter")this.send()}}
+                />
+                <button
+                  style={{borderRadius:5, backgroundColor:"#2196f3", color:'white', borderWidth:0, padding:5}}
+                  onClick={this.send}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+
           </div>
           
-          <div style={{position:'absolute',bottom:40, width:WindowWidth, backgroundColor:'red'}}>
-            <input 
-              style={{margin:10, padding:5, width:'80%', borderRadius:5, borderWidth:0}}
-              placeHolder="Enter your query......Or see the form below"
-              value={this.state.message}
-              onChange={this.onChangeText}
-              onKeyDown={(e)=>{if(e.key=="Enter")this.send()}}
-            />
-            <button
-              style={{borderRadius:5, backgroundColor:'blue', color:'white', borderWidth:0}}
-              onClick={this.send}
-            >
-              Send
-            </button>
-          </div>
         </div>
-        <div style={{}}>
-          {
-            this.renderForm()
-          }
-        </div>
+        
       </div>
     );
 
