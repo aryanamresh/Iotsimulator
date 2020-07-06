@@ -1,0 +1,38 @@
+{
+  "action_fingerprints": {
+    "action_listen": {
+      "slots": []
+    },
+    "utter_goodbye": {
+      "slots": []
+    },
+    "utter_happy": {
+      "slots": []
+    },
+    "utter_train": {
+      "slots": []
+    },
+    "utter_iamabot": {
+      "slots": []
+    },
+    "utter_did_that_help": {
+      "slots": []
+    }
+  },
+  "python": "3.7.6",
+  "max_histories": [
+    5,
+    5,
+    null
+  ],
+  "ensemble_name": "rasa.core.policies.ensemble.SimplePolicyEnsemble",
+  "policy_names": [
+    "rasa.core.policies.memoization.MemoizationPolicy",
+    "rasa.core.policies.ted_policy.TEDPolicy",
+    "rasa.core.policies.mapping_policy.MappingPolicy"
+  ],
+  "trained_at": "20200704-190608",
+  "rasa": "1.10.4",
+  "tensorflow": "2.1.1",
+  "sklearn": "0.22.2.post1"
+}

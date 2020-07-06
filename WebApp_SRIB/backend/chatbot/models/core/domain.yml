@@ -1,0 +1,74 @@
+actions:
+- utter_cheer_up
+- utter_did_that_help
+- utter_goodbye
+- utter_greet
+- utter_happy
+- utter_iamabot
+- utter_train
+config:
+  store_entities_as_slots: true
+entities:
+- ds
+- ms
+- ts
+- users
+forms: []
+intents:
+- greet:
+    use_entities: true
+- goodbye:
+    use_entities: true
+- affirm:
+    use_entities: true
+- deny:
+    use_entities: true
+- mood_great:
+    use_entities: true
+- mood_unhappy:
+    use_entities: true
+- bot_challenge:
+    use_entities: true
+- training:
+    use_entities: []
+responses:
+  utter_cheer_up:
+  - image: https://i.imgur.com/nGF1K8f.jpg
+    text: 'Here is something to cheer you up:'
+  utter_did_that_help:
+  - text: Did that help you?
+  utter_goodbye:
+  - text: Bye
+  - text: Hope it helped you.
+  - text: Hope to see you again.
+  utter_greet:
+  - text: Hey! Welcome to IoT Data Simulator
+  - text: Hey! How may I help you?
+  - text: Hi! This is IoT Data Simulator
+  - text: Welcome to DeepSim!!!
+  utter_happy:
+  - text: Great, carry on!
+  utter_iamabot:
+  - text: Yes! I am a chatbot
+  utter_train:
+  - text: 1 , {users} , {ds} , {ms} , {ts}
+session_config:
+  carry_over_slots_to_new_session: true
+  session_expiration_time: 60
+slots:
+  ds:
+    auto_fill: true
+    initial_value: '10'
+    type: rasa.core.slots.UnfeaturizedSlot
+  ms:
+    auto_fill: true
+    initial_value: '10'
+    type: rasa.core.slots.UnfeaturizedSlot
+  ts:
+    auto_fill: true
+    initial_value: '10'
+    type: rasa.core.slots.UnfeaturizedSlot
+  users:
+    auto_fill: true
+    initial_value: '1000'
+    type: rasa.core.slots.UnfeaturizedSlot
