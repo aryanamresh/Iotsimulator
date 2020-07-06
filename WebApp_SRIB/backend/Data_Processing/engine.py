@@ -19,7 +19,7 @@ def Get_Sensor_Data (len_,sz_,sensor_id,res_,log_count):
     cnt=0
     for i in data_ind:
         cnt = cnt + 1
-        s = 'data/'+sensor_id+str(i)+'.txt'
+        s = 'Data_Processing/data/'+sensor_id+str(i)+'.txt'
         name = sensor_id+ str(cnt)
         print(s)
         data_part=np.loadtxt(s, delimiter="\t", skiprows=1)
