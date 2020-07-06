@@ -23,7 +23,7 @@ class App extends React.Component{
                     <img src="bot.jpg" style={{height:'100%', width:'100%', borderRadius:'100%'}}/>
                   </div>
                   <div style={{backgroundColor:'white', borderRadius:5, padding:10, maxWidth:'70%'}}>
-                  <text>Hi, Welcome to Deep Sim. Here you can simulate IoT data for different number of users and IoT devices. You can may either enter your query in text box or directly select the options from the left.</text>
+                  <text>Hi, Welcome to Deep Sim. Here you can simulate IoT data for different number of users and IoT devices. You may either enter your query in text box or directly select the options from the left.</text>
                   </div>
                 </div>
               ],
@@ -146,27 +146,32 @@ class App extends React.Component{
             this.createTextResponse("Data is ready...")
           }
         </div>
-        <div style={{backgroundColor:'white', width:'100%', height:0.9*WindowHeight, borderRadius:5}}>
+        <div style={{backgroundColor:'white', width:'100%', height:0.91*WindowHeight, borderRadius:5}}>
           <div style={{display:'flex', height:'50%'}}>
             <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
-              <text>Summary Report</text>
+              <text style={{fontWeight:'bold'}}>Summary Report</text><br/><br/>
+              <text>1. Total number of logs per user : 1000</text><br/><br/>
+              <text>2. Schema of the output data : (date, time, sensorID, value)</text><br/><br/>
+              <text>3. Output data :- </text>
               {
                 this.createDownloadLink(csvData)
               }
             </div>
             <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
-              <text>Graph 1</text>
-            </div>
-            <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
-              <text>Algo details and accuracy</text>
+              <text style={{fontWeight:'bold'}}>Model details</text><br/><br/>
+              <text>1. Algorithm used : TimeGAN</text><br/><br/>
+              <text>2. Training data used : CASAS Aruba dataset</text><br/><br/>
+              <text>3. Number of training epochs : 10,000</text><br/><br/>
+              <text>4. Sequence length used : 24</text><br/><br/>
+              <text>5. Number of hidden layers : 3</text>
             </div>
           </div>
           <div style={{display:'flex', height:'50%'}}>
             <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
-              <text>Original vs Simulated Data</text>
+              <img src="graph1.jpg" style={{height:'100%', width:'100%'}}/>
             </div>
             <div style={{backgroundColor:'#b9f6ca', margin:10, padding:10, borderRadius:5, flex:1}}>
-              <text>Graph 2</text>
+              <img src="graph2.jpg" style={{height:'100%', width:'100%'}}/>
             </div>
           </div>
         </div>
