@@ -245,11 +245,7 @@ class App extends React.Component{
   }
 
   simulate = (s)=>{
-    s = s.toLowerCase();
-    if(s=="s" || s=="g"){
-      return true;
-    }
-    return false;
+    return true;
   }
 
   onChangeText = (event)=>{

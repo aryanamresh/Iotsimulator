@@ -2,7 +2,7 @@ from rasa.core.agent import Agent
 from rasa.core.interpreter import RasaNLUInterpreter
 import asyncio
 interpreter = RasaNLUInterpreter("/home/pulkit/bot/chatbot/models/nlu")
-agent = Agent.load("/home/pulkit/bot/chatbot/models/20200704-201146.tar.gz",interpreter=interpreter)
+agent = Agent.load("/home/pulkit/bot/chatbot/models/20200706-002358.tar.gz",interpreter=interpreter)
 async def inter(str):
     a=await agent.handle_text(str)
     # b=await interpreter.parse(str)
@@ -53,15 +53,15 @@ def process(str):
     result = loop.run_until_complete(inter(str))
     return result
 
-str="Print IoT data for  100 temperature sensors "
-print(str)
-print(process(str))
-str= "Hello chatboot"
-print(str)
-print(process(str))
-str= "Good Bye"
-print(str)
-print(process(str))
+# str="Print IoT data for  100 temperature sensors "
+# print(str)
+# print(process(str))
+# str= "Hello chatboot"
+# print(str)
+# print(process(str))
+# str= "Good Bye"
+# print(str)
+# print(process(str))
 
 
 

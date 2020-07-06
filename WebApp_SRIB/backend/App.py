@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request, send_file
 from flask_restful import Resource, Api 
 
 import sys
-sys.path.insert(1, 'C:\\Users\\Dhananjay Deswal\\Documents\\SRIBgithub\\Iotsimulator\\WebApp_SRIB\\backend\\Data_Processing')
+sys.path.insert(1, './Data_Processing')
 #print(sys.path)
 from Data_Processing.main import handleNLUoutput
 
@@ -31,7 +31,13 @@ def handleQuery(postedData):
 		tup = (1, postedData["userFreq"], postedData["doorSensors"], postedData["motionSensors"], postedData["tempSensors"])
 
 	else:
-		tup = (1, 10,5,5,0)
+		input_string=postedData["query"]
+		sys.path.insert(1, './chatbot')
+		from nlu import process 
+		tup=(1,10,5,5,5)
+		tupp = process(input_string)
+		if not tupp[0]:
+			tup=tupp[1]
 
 	handleNLUoutput(tup)
 	filePath = 'output.csv'
@@ -122,4 +128,4 @@ api.add_resource(GraphData, '/graphdata')
 # driver function 
 if __name__ == '__main__': 
 
-	app.run(debug = True) 
+	app.run(debug = False) 
