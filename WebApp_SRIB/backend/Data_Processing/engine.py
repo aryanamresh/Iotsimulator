@@ -14,12 +14,15 @@ def Generate_Randoms(num, start = 1, end = 10000):
     return arr
 
 # This function generates data for a particular sensor
-def Get_Sensor_Data (len_,sz_,sensor_id,res_,log_count):
+def Get_Sensor_Data (len_,sz_,sensor_id,res_,log_count,tup):
     data_ind = Generate_Randoms(len_,0,sz_-1)
     cnt=0
     for i in data_ind:
         cnt = cnt + 1
-        s = 'Data_Processing/data/'+sensor_id+str(i)+'.txt'
+        if tup[0]==1:
+            s = 'Data_Processing/data/TGAN/'+sensor_id+str(i)+'.txt'
+        else:
+            s = 'Data_Processing/data/CTGAN/'+sensor_id+str(i)+'.txt'
         name = sensor_id+ str(cnt)
         print(s)
         data_part=np.loadtxt(s, delimiter="\t", skiprows=1)
@@ -98,7 +101,6 @@ def Generate_Time_Stamp(diff, pre_stamp): # pre stamp is a list of numbers in fo
     return pre_stamp
 
 def Generate_Data(tup,start_date,D_size,M_size,T_size,log_count=1000):
-
     no_of_users = tup[1]
 
     len_D = tup[2]
@@ -109,13 +111,13 @@ def Generate_Data(tup,start_date,D_size,M_size,T_size,log_count=1000):
     res_M = []
     res_D = []
     # Temperature Sensor
-    Get_Sensor_Data(len_T,T_size,'T',res_T,log_count)
+    Get_Sensor_Data(len_T,T_size,'T',res_T,log_count,tup)
 
     # Motion Sensor
-    Get_Sensor_Data(len_M,M_size,'M',res_M,log_count)
+    Get_Sensor_Data(len_M,M_size,'M',res_M,log_count,tup)
 
     # Door Sensor
-    Get_Sensor_Data(len_D,D_size,'D',res_D,log_count)
+    Get_Sensor_Data(len_D,D_size,'D',res_D,log_count,tup)
 
     Final_res = []
 
@@ -133,23 +135,26 @@ def Generate_Data(tup,start_date,D_size,M_size,T_size,log_count=1000):
     user_id = random.sample(range(10000000, 99999999), no_of_users)
 
     outF = open('output.csv', "w")
+    outF.write('USER_ID#,DATE,TIME,SENSOR_ID,SENSOR_VALUE\n')
     # print (len(Final_res))
     for i in range(no_of_users):
         pre_stamp = start_date
         Random_ind = random.sample(range(1, len(Final_res)-1), log_count)
-        s = 'USER_ID#'+str(user_id[i])
-        outF.write(s)
-        outF.write('\n')
+        s = str(user_id[i])
+        # outF.write(s)
+        # outF.write('\n')
         cnt=0
         for ind in Random_ind:
+            outF.write(s)
+            outF.write(',')
+            zz=0
             for line in Final_res[ind]:
                 stamp = ''
-                if line==Final_res[ind][0]:
+                zz=zz+1
+                if zz==1:
                     cnt=cnt+1
                     # print(cnt)
                     if cnt>1:
-                        # print('line')
-                        # print(line)
                         pre_stamp = Generate_Time_Stamp(line, pre_stamp)
                     # outF.write((str)(pre_stamp[0]))
                     stamp = (str)(pre_stamp[0])+'-'+(str)(pre_stamp[1])+'-'+(str)(pre_stamp[2])
