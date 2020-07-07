@@ -1,7 +1,6 @@
 {
   "states": [
     "intent_affirm",
-    "intent_bot_challenge",
     "intent_deny",
     "intent_goodbye",
     "intent_greet",
@@ -26,7 +25,6 @@
     "prev_utter_goodbye",
     "prev_utter_greet",
     "prev_utter_happy",
-    "prev_utter_iamabot",
     "prev_utter_train"
   ]
 }

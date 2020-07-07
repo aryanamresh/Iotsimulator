@@ -4,7 +4,6 @@ actions:
 - utter_goodbye
 - utter_greet
 - utter_happy
-- utter_iamabot
 - utter_train
 config:
   store_entities_as_slots: true
@@ -27,8 +26,6 @@ intents:
     use_entities: true
 - mood_unhappy:
     use_entities: true
-- bot_challenge:
-    use_entities: true
 - training:
     use_entities: []
 responses:
@@ -48,8 +45,6 @@ responses:
   - text: Welcome to DeepSim!!!
   utter_happy:
   - text: Great, carry on!
-  utter_iamabot:
-  - text: Yes! I am a chatbot
   utter_train:
   - text: 1 , {users} , {ds} , {ms} , {ts}
 session_config:

@@ -1,0 +1,44 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-ds",
+      "2": "I-ds",
+      "3": "L-ds",
+      "4": "U-ds",
+      "5": "B-ms",
+      "6": "I-ms",
+      "7": "L-ms",
+      "8": "U-ms",
+      "9": "B-ts",
+      "10": "I-ts",
+      "11": "L-ts",
+      "12": "U-ts",
+      "13": "B-users",
+      "14": "I-users",
+      "15": "L-users",
+      "16": "U-users",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-ds": 1,
+      "I-ds": 2,
+      "L-ds": 3,
+      "U-ds": 4,
+      "B-ms": 5,
+      "I-ms": 6,
+      "L-ms": 7,
+      "U-ms": 8,
+      "B-ts": 9,
+      "I-ts": 10,
+      "L-ts": 11,
+      "U-ts": 12,
+      "B-users": 13,
+      "I-users": 14,
+      "L-users": 15,
+      "U-users": 16,
+      "O": 0
+    },
+    "num_tags": 17
+  }
+]

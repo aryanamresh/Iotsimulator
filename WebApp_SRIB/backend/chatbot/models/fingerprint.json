@@ -1,11 +1,11 @@
 {
   "config": "99914b932bd37a50b983c5e7c90ae93b",
   "core-config": "977455427a0873dad8c7696e8b802567",
-  "nlu-config": "f6c15158d9ca30166df08b9aa260c405",
-  "domain": 868108047690236281,
-  "nlg": "248ca579099ec1887a6348902e5f8449",
-  "messages": 990500277668818546,
-  "stories": 948318408225042670,
-  "trained_at": 1593869731.2169328,
+  "nlu-config": "366a2482da4fe474af33daec6ce8256b",
+  "domain": 2101327823067473626,
+  "nlg": "c6537b70b55913fde0fcf4ebdfd70fad",
+  "messages": 963983587565785627,
+  "stories": 1559623065103096824,
+  "trained_at": 1593975085.7544916,
   "version": "1.10.4"
 }
